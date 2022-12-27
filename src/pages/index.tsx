@@ -139,10 +139,11 @@ const links = [
 const IndexPage: React.FC<PageProps> = () => {
   return (
     <main style={pageStyles}>
-      <h1 style={headingStyles}>
-        Congratulations
+      {/* some tailwind css */}
+      <h1 className="text-3xl text-red-300 font-bold underline">
+        Congratulations - Hi Clove!
         <br />
-        <span style={headingAccentStyles}>— you just made a Gatsby site! 🎉🎉🎉</span>
+        <span style={headingAccentStyles}>— you just made a Gatsby site with TailwindCSS! 🎉🎉🎉</span>
       </h1>
       <p style={paragraphStyles}>
         Edit <code style={codeStyles}>src/pages/index.tsx</code> to see this page
