@@ -136,6 +136,23 @@ const links = [
   },
 ]
 
+// const mdQuery = await graphql(
+//   `
+//     {
+//       allMarkdownRemark(limit: 1000) {
+//         edges {
+//           node {
+//             frontmatter {
+//               created
+//               tags
+//             }
+//           }
+//         }
+//       }
+//     }
+//   `
+// )
+
 const IndexPage: React.FC<PageProps> = () => {
   return (
     <main style={pageStyles}>
