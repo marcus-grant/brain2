@@ -1,18 +1,25 @@
-import * as REact from 'react';
+import React, { FC } from 'react';
 import { Link, graphql } from 'gatsby';
 
-import Bio from "../components/bio"
-import Layout from "../components/layout"
-import Seo from "../components/seo"
+import Bio from '../components/bio';
+import Layout from '../components/layout';
+import SEO from '../components/seo';
 
-const BlogPostTemplate = ({
-  data: { previous, next, site, markdownRemark: post },
-  location,
-}) => {
-  const siteTitle = site.siteMetadata?.title || `Title`
+interface Props {
+  data: any;
+  location: string;
+}
+
+const BlogPostTemplate: FC<Props> = ({ data }) => {
+  const post = data.markdownRemark;
+  const { previous, next } = data;
 
   return (
-    <Layout location={location} title={siteTitle}>
+    <Layout>
+      <SEO
+        title={post.frontmatter.title}
+        description={post.frontmatter.description || post.excerpt}
+      />
       <article
         className="blog-post"
         itemScope
@@ -58,19 +65,10 @@ const BlogPostTemplate = ({
         </ul>
       </nav>
     </Layout>
-  )
-}
+  );
+};
 
-export const Head = ({ data: { markdownRemark: post } }) => {
-  return (
-    <Seo
-      title={post.frontmatter.title}
-      description={post.frontmatter.description || post.excerpt}
-    />
-  )
-}
-
-export default BlogPostTemplate
+export default BlogPostTemplate;
 
 export const pageQuery = graphql`
   query BlogPostBySlug(
@@ -110,4 +108,4 @@ export const pageQuery = graphql`
       }
     }
   }
-`
+`;
