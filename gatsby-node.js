@@ -7,9 +7,11 @@
 const path = require('path');
 const { createFilePath } = require('gatsby-source-filesystem');
 // const { transformTitleToPath } = require('./src/util/meta-utils');
+const { kebabCase } = require('lodash.kebabcase');
 
 // Define the template for blog post
 const noteTemplate = path.resolve('./src/templates/note.tsx');
+const tagTemplate = path.resolve('./src/templates/tags.tsx');
 
 /**
  * @type {import('gatsby').GatsbyNode['createPages']}
@@ -17,35 +19,41 @@ const noteTemplate = path.resolve('./src/templates/note.tsx');
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions;
 
-  // Get all markdown blog posts sorted by date
-  // OLD SORT DIRECTIVE:
-  // allMarkdownRemark(sort: { frontmatter: { date: DESC } }, limit: 1000) {
   const result = await graphql(`
     {
-      allMarkdownRemark(limit: 1000) {
-          nodes {
-            id
-            fields {
-              slug
-            }
-            headings(depth: h1) { value }
+      notesRemark: allMarkdownRemark(
+        limit: 1024
+      ) {
+        nodes {
+          id
+          fields {
+            slug
           }
+          headings(depth: h1) { value }
+        }
+      }
+      tagsGroup: allMarkdownRemark(
+        limit: 2048
+      ) {
+        group(field: { frontmatter: { tags: SELECT }}) {
+          fieldValue
+        }
       }
     }
   `);
 
   if (result.errors) {
     reporter.panicOnBuild(
-      'There was an error loading your blog posts',
+      'There was an error querying for notesRemark or tagsGroup',
       result.errors,
     );
     return;
   }
 
-  const notes = result.data.allMarkdownRemark.nodes;
+  const notes = result.data.notesRemark.nodes;
 
   // TODO: Find out why this can't be imported from utils
-  transformTitleToPath = (title) => {
+  const transformTitleToPath = (title) => {
     return title
       .replace(/\s+/g, '-')
       .toLowerCase()
@@ -81,6 +89,20 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         });
       });
   }
+
+  // Extract tag data from query
+  const tags = result.data.tagsGroup.group;
+
+  // Make tag pages
+  tags.forEach(tag => {
+    createPage({
+      path: `/tags/${kebabCase(tag.fieldValue)}/`,
+      component: tagTemplate,
+      context: {
+        tag: tag.fieldValue,
+      },
+    });
+  });
 };
 
 /**
