@@ -7,7 +7,7 @@
 const path = require('path');
 const { createFilePath } = require('gatsby-source-filesystem');
 // const { transformTitleToPath } = require('./src/util/meta-utils');
-const { kebabCase } = require('lodash.kebabcase');
+// const kebabCase = require('lodash.kebabcase');
 
 // Define the template for blog post
 const noteTemplate = path.resolve('./src/templates/note.tsx');
@@ -78,7 +78,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
         createPage({
         // path: notes.fields.slug,
-          path: pagePath,
+          path: `/notes/${pagePath}`,
           component: noteTemplate,
           context: {
             id: note.id,
@@ -96,7 +96,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   // Make tag pages
   tags.forEach(tag => {
     createPage({
-      path: `/tags/${kebabCase(tag.fieldValue)}/`,
+      path: `/tags/${transformTitleToPath(tag.fieldValue)}/`,
       component: tagTemplate,
       context: {
         tag: tag.fieldValue,
@@ -125,8 +125,19 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 /**
  * @type {import('gatsby').GatsbyNode['createSchemaCustomization']}
  */
-exports.createSchemaCustomization = ({ actions }) => {
+exports.createSchemaCustomization = ({ actions/*, schema*/ }) => {
   const { createTypes } = actions;
+  // Attempt @ replicating example here:
+  // https://www.gatsbyjs.com/docs/reference/config-files/actions/#createTypes
+  // const typeDefs = [
+  //   schema.buildInputObjectType({
+  //     name: 'SiteMetadata',
+  //     fields: {
+  //       author: 'String!',
+  //       siteUrl: 'String!'
+  //     },
+  //   })
+  // ];
 
   // Explicitly define the siteMetadata {} object
   // This way those will always be defined even if removed from gatsby-config.js
@@ -150,6 +161,10 @@ exports.createSchemaCustomization = ({ actions }) => {
       twitter: String
     }
 
+    type Fields {
+      slug: String
+    }
+
     type MarkdownRemark implements Node {
       frontmatter: Frontmatter
       fields: Fields
@@ -159,10 +174,13 @@ exports.createSchemaCustomization = ({ actions }) => {
       title: String
       description: String
       date: Date @dateformat
-    }
-
-    type Fields {
-      slug: String
+      tags: [String!] @dontInfer
     }
   `);
 };
+
+// DELETEME Removed from boiler plate, might not be needed
+// might also cause conflicting field types during build
+// type Fields {
+//   slug: String
+// }

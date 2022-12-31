@@ -48,8 +48,8 @@ const HomePage: FC<PageProps<DataProps>> = ({
     .filter(edge => edge.node.headings.length > 0)
     .map(edge => (
       <NoteLink
-        // id={edge.id}
-        path={transformTitleToPath(edge.node.headings[0].value)}
+        id={edge.id}
+        path={`/notes/${transformTitleToPath(edge.node.headings[0].value)}`}
         title={edge.node.headings[0].value}
         excerpt={edge.node.excerpt}
       />

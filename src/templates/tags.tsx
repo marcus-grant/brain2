@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import { Link, graphql } from 'gatsby';
+import { transformTitleToPath } from '../util/meta-utils';
 
 // TODO: Turn this into a function that queries then returns destructured vars
 interface TagsProps {
@@ -18,6 +19,9 @@ interface TagsProps {
           fields: {
             slug: string,
           }
+          headings: Array<{
+            value: string
+          }>,
         },
       }>
     }
@@ -35,17 +39,16 @@ const Tags: FC<TagsProps> = ({ pageContext, data }) => {
       <h1>{tagHeader}</h1>
       <ul>
         {edges.map(({ node }) => {
-          const { slug } = node.fields;
-          const { title } = node.frontmatter;
+          const slug = transformTitleToPath(node.fields.slug);
+          const title = node.headings[0].value || 'untitled';
+          const path = transformTitleToPath(title);
           return (
             <li key={slug}>
-              <Link to={slug}>{title}</Link>
+              <Link to={`/notes/${path}`}>{title}</Link>
             </li>
           );
         })}
       </ul>
-      {/* This links to a page that doesn't yet exist.
-      Comeback and add to it! */}
       <Link to="/tags">All Tags</Link>
     </div>
   );
@@ -66,6 +69,7 @@ export const pageQuery = graphql`
           fields {
             slug
           }
+          headings(depth: h1) { value }
           frontmatter {
             title
           }

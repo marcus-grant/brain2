@@ -33,7 +33,7 @@ const Header: FC = () => {
 
       <nav>
         <Link style={{ marginLeft: '1rem' }} to="/">Home</Link>
-        <Link style={{ marginLeft: '1rem' }} to="/writing">Writing</Link>
+        <Link style={{ marginLeft: '1rem' }} to="/tags">Tags</Link>
         <Link style={{ marginLeft: '1rem' }} to="/about">About</Link>
       </nav>
     </header>

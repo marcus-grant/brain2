@@ -19,15 +19,6 @@ const config: GatsbyConfig = {
         'icon': 'src/images/icon.png',
       },
     },
-    // TODO: No longer maintained, consider maintaining yourself
-    // {
-    //   resolve: "gatsby-source-git",
-    //   options: {
-    //     remote: "https://github.com/marcus-grant/notes",
-    //     branch: "main",
-    //     patterns: ["*.{md,png,jpg}"],
-    //   },
-    // },
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
