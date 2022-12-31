@@ -114,6 +114,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   if (node.internal.type === 'MarkdownRemark') {
     const value = createFilePath({ node, getNode });
 
+    // TODO: Investigate based on issue # 13 whether slug in this context is a filename
     createNodeField({
       name: 'slug',
       node,
