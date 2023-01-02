@@ -42,7 +42,7 @@ const config: GatsbyConfig = {
       options: {
         path: `${__dirname}/content/notes`,
         name: 'notes',
-        // ignore: [`${__dirname}/content/notes/.zk`, `${__dirname}/content/notes/.zk`],
+        ignore: [`${__dirname}/content/notes/.foam`, `${__dirname}/content/notes/.zk`],
       },
     },
     {

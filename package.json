@@ -8,9 +8,9 @@
     "gatsby"
   ],
   "scripts": {
-    "develop": "git submodule update --remote content/notes; gatsby develop",
+    "develop": "git submodule update --remote content/notes; npx gatsby develop",
     "start": "gatsby develop",
-    "build": "git submodule update --remote content/notes; gatsby build",
+    "build": "git submodule update --remote content/notes; npx gatsby develop build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
