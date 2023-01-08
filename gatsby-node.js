@@ -65,29 +65,29 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   // `context` is available in the template as a prop and as a variable in GraphQL
 
   if (notes.length > 0) {
-    notes
-      .filter(note => note.headings.length > 0)
-      .forEach((note, index) => {
-        // TODO: Add next & previous note functionality
-        const previousPostId = index === 0 ? null : notes[index - 1].id;
-        const nextPostId = index === notes.length - 1 ? null : notes[index + 1].id;
-        //TODO: Create script to find notes without valid heading titles
-        const title = transformTitleToPath(note.headings[0].value);
-        const pagePath = transformTitleToPath(title);
-        console.log(title);
+    notes.forEach((note, noteIndex) => {
+      // TODO: Add next & previous note functionality
+      const previousPostId = noteIndex === 0 ? null : notes[noteIndex - 1].id;
+      const nextPostId = noteIndex === notes.length - 1 ? null : notes[noteIndex + 1].id;
+      const notePath = `/notes${note.fields.slug}`;
+      let title = 'untitled';
+      if (note.headings.count > 0) {
+        if (note.headings[0].value) { title = note.headings[0].value; }
+      }
 
-        createPage({
-        // path: notes.fields.slug,
-          path: `/notes/${pagePath}`,
-          component: noteTemplate,
-          context: {
-            id: note.id,
-            title: title,
-            previousPostId,
-            nextPostId,
-          },
-        });
+      console.log(path);
+
+      createPage({
+        path: notePath,
+        component: noteTemplate,
+        context: {
+          id: note.id,
+          title: title,
+          previousPostId,
+          nextPostId,
+        },
       });
+    });
   }
 
   // Extract tag data from query
@@ -112,7 +112,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions;
 
   if (node.internal.type === 'MarkdownRemark') {
-    const value = createFilePath({ node, getNode });
+    const value = createFilePath({ node, getNode, trailingSlash: false });
 
     // TODO: Investigate based on issue # 13 whether slug in this context is a filename
     createNodeField({

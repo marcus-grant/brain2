@@ -39,12 +39,12 @@ const Tags: FC<TagsProps> = ({ pageContext, data }) => {
       <h1>{tagHeader}</h1>
       <ul>
         {edges.map(({ node }) => {
-          const slug = transformTitleToPath(node.fields.slug);
+          const slug = node.fields.slug;
+          const path = `/notes${slug}`;
           const title = node.headings[0].value || 'untitled';
-          const path = transformTitleToPath(title);
           return (
             <li key={slug}>
-              <Link to={`/notes/${path}`}>{title}</Link>
+              <Link to={path}>{title}</Link>
             </li>
           );
         })}
